@@ -864,6 +864,7 @@ class Wordmedia_Public {
         	$powergallery_columns = ! isset( $meta['powergallery_columns'][0] ) ? 0 : $meta['powergallery_columns'][0];
 
         	$powergallery_zoom = ! isset( $meta['powergallery_zoom'][0] ) ? 1 : $meta['powergallery_zoom'][0];
+        	$powergallery_gray = ! isset( $meta['powergallery_gray'][0] ) ? 1 : $meta['powergallery_gray'][0];
 
         	$powergallery_border = ! isset( $meta['powergallery_border'][0] ) ? 0 : $meta['powergallery_border'][0];
 			$powergallery_border_color = ! isset( $meta['powergallery_border_color'][0] ) ? '' : $meta['powergallery_border_color'][0];
@@ -968,7 +969,7 @@ class Wordmedia_Public {
 				<div id="powergallery-<?= get_the_ID(); ?>" class="powergallery">
 					<div class="powergallery-int">
 						<?php foreach ($powergallery_pics as $key => $value) { ?>
-							<p class="powergallery-entry <?php if ( $powergallery_zoom == 1 ): ?>pageimagezoom<?php endif ?>" data-src="<?php echo $powergallery_pics_src[$key] ?>"><img src="<?php echo $powergallery_pics_src[$key] ?>"></p>
+							<p class="powergallery-entry <?php if ( $powergallery_zoom == 1 ): ?>pageimagezoom<?php endif ?> <?php if ( $powergallery_gray == 1 ): ?>grayscale grayscale-fade<?php endif ?>" data-src="<?php echo $powergallery_pics_src[$key] ?>"><img src="<?php echo $powergallery_pics_src[$key] ?>"></p>
 						<?php } ?>
 					</div>
 				</div>				
@@ -982,7 +983,6 @@ class Wordmedia_Public {
 					<?php if ($powergallery_type == 0): ?>
 						#powergallery-<?= get_the_ID(); ?> { 
 							max-width: <?= $powergallery_width ?>px;
-							height: <?= $powergallery_height ?>px;
 							margin: auto;
 							clear: both; 
 							float: none;
@@ -993,7 +993,8 @@ class Wordmedia_Public {
 						#powergallery-<?= get_the_ID(); ?> .powergallery-entry { 
 							width: -webkit-calc(<?= $column_percent ?>% - 0.1px);
 							width: calc(<?= $column_percent ?>% - 0.1px);
-							height: <?= $powergallery_height ?>px;
+							height: auto;
+							max-height: <?= $powergallery_height ?>px;
 							line-height: 0;
 							font-size: 0;
 							float: left;
@@ -1009,10 +1010,20 @@ class Wordmedia_Public {
 							<?php endif ?>
 							<?php if ( $powergallery_margin != 0 ): ?>
 								margin: <?= $powergallery_margin ?>px;
-								width: -webkit-calc(<?= $column_percent ?>% - <?= 2 * $powergallery_margin ?>px)!important;
-								width: calc(<?= $column_percent ?>% - <?= 2 * $powergallery_margin ?>px)!important;
 							<?php endif ?>
 						}
+						<?php if ( $powergallery_margin != 0 ): ?>
+							#powergallery-<?= get_the_ID(); ?> .powergallery-entry {
+							    width: -webkit-calc(<?= $column_percent ?>% - <?= $powergallery_margin * ( $powergallery_columns - 1 ) / $powergallery_columns * 2 ?>px);
+								width: calc(<?= $column_percent ?>% - <?= $powergallery_margin * ( $powergallery_columns - 1 ) / $powergallery_columns * 2 ?>px);
+							}
+							#powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns ?>n + 1) {
+								margin-left: 0px;
+							}
+							#powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns ?>n + <?= $powergallery_columns ?>) {
+								margin-right: 0px;
+							}
+						<?php endif ?>
 						#powergallery-<?= get_the_ID(); ?> .powergallery-entry:hover {
 							cursor:  pointer;
 						}
@@ -1022,7 +1033,41 @@ class Wordmedia_Public {
 							width: 100%;
 							-o-object-fit: cover;
 							object-fit: cover;
-						}						
+						}
+						@media (max-width: 959px) and (min-width: 480px) {
+							<?php if ( $powergallery_columns == 2 || $powergallery_column == 4 ): ?>
+								<?php if ( $powergallery_margin != 0 ): ?>
+									#powergallery-<?= get_the_ID(); ?> .powergallery-entry {
+								        width: -webkit-calc(<?= $column_percent * 2 ?>% - <?= $powergallery_margin ?>px);
+										width: calc(<?= $column_percent * 2 ?>% - <?= $powergallery_margin ?>px);
+								    }
+								    #powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns / 2 ?>n + 1) {
+								        margin-left: 0px!important;
+								    }
+								    #powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns / 2 ?>n + <?= $powergallery_columns / 2 ?>) {
+								        margin-right: 0px!important;
+								    }
+								<?php endif ?>
+								<?php if ($powergallery_margin == 0): ?>
+									#powergallery-<?= get_the_ID(); ?> .powergallery-entry {
+								        width: <?= $column_percent * 2 ?>%;
+								    }
+								    #powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns / 2 ?>n + 1) {
+								        margin-left: 0px!important;
+								    }
+								    #powergallery-<?= get_the_ID(); ?> .powergallery-entry:nth-child(<?= $powergallery_columns / 2 ?>n + <?= $powergallery_columns / 2 ?>) {
+								        margin-right: 0px!important;
+								    }
+							    <?php endif ?>
+						    <?php endif ?>
+						}
+						@media (max-width: 479px) {
+						    #powergallery-<?= get_the_ID(); ?> .powergallery-entry {
+						    	width: -webkit-calc(100% - 0.1px)!important;
+						        width: calc(100% - 0.1px)!important;
+						        margin: <?= $powergallery_margin / 2 ?>px 0px!important;
+						    }
+						}					
 					<?php endif ?>
 					<?php if ($powergallery_type == 1): ?>
 						#powergallery-<?= get_the_ID(); ?> {

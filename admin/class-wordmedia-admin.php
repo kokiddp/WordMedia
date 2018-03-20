@@ -3219,6 +3219,7 @@ class Wordmedia_Admin {
 		$powergallery_columns = ! isset( $meta['powergallery_columns'][0] ) ? 3 : $meta['powergallery_columns'][0];
 
 		$powergallery_zoom = ! isset( $meta['powergallery_zoom'][0] ) ? 0 : $meta['powergallery_zoom'][0];
+		$powergallery_gray = ! isset( $meta['powergallery_gray'][0] ) ? 0 : $meta['powergallery_gray'][0];
 
 		$powergallery_border = ! isset( $meta['powergallery_border'][0] ) ? 0 : $meta['powergallery_border'][0];
 		$powergallery_border_color = ! isset( $meta['powergallery_border_color'][0] ) ? '' : $meta['powergallery_border_color'][0];
@@ -3276,6 +3277,15 @@ class Wordmedia_Admin {
 				</td>
 				<td colspan="4">
 					<input type="checkbox" name="powergallery_zoom" value="1" <?php checked( 1 == $powergallery_zoom ); ?> />
+				</td>
+			</tr>
+
+			<tr>
+				<td class="powergallery_meta_box_td" colspan="1">
+					<label for="powergallery_gray" style="font-weight: bold;"><?php _e( 'Grayscale?', 'wordmedia' ); ?></label>
+				</td>
+				<td colspan="4">
+					<input type="checkbox" name="powergallery_gray" value="1" <?php checked( 1 == $powergallery_gray ); ?> />
 				</td>
 			</tr>
 
@@ -3355,6 +3365,7 @@ class Wordmedia_Admin {
 		$meta['powergallery_margin'] = ( isset( $_POST['powergallery_margin'] ) ? esc_textarea( $_POST['powergallery_margin'] ) : 0 );
 
 		$meta['powergallery_zoom'] = ( isset( $_POST['powergallery_zoom'] ) ? $_POST['powergallery_zoom'] : 0 );
+		$meta['powergallery_gray'] = ( isset( $_POST['powergallery_gray'] ) ? $_POST['powergallery_gray'] : 0 );
 		
 		$meta['powergallery_css'] = ( isset( $_POST['powergallery_css'] ) ? htmlspecialchars( $_POST['powergallery_css'] ) : '' );
 
